@@ -1,0 +1,269 @@
+:root {
+  --primary: #3E40AE;
+  --text: #111;
+  --muted: #7c7c7c;
+  --card: #fff;
+  --shadow: 0 8px 16px rgba(0, 0, 0, .15);
+  --max: 1280px;
+}
+
+.home { padding: 24px 0 56px; }
+
+.container {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ===== Best Sellers ===== */
+.best-sellers {
+  background: var(--primary);
+  color: #fff;
+  border-radius: 14px;
+  padding: 28px;
+  margin: 60px 0;
+  width: 100%;
+  box-shadow: var(--shadow);
+}
+
+.best-sellers__head {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.best-sellers__head h2 {
+  font: 600 26px/1.2 "Poppins", system-ui, sans-serif;
+  margin: 0;
+}
+
+.shop-all {
+  color: #cfe0ff;
+  text-decoration: none;
+  font: 500 16px/1 "Poppins", system-ui, sans-serif;
+}
+.shop-all:hover { text-decoration: underline; }
+
+/* Grid */
+.products {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 28px;
+}
+@media (max-width: 1024px) {
+  .products { grid-template-columns: repeat(3, minmax(180px, 1fr)); }
+}
+@media (max-width: 720px) {
+  .products { grid-template-columns: repeat(2, minmax(150px, 1fr)); }
+}
+
+/* ===== Card ===== */
+.product {
+  position: relative;                 /* ให้ overlay/ปุ่มอ้างอิงได้ */
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border-radius: 12px;
+  color: var(--text);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, .12);
+  transition: transform .12s ease, box-shadow .12s ease;
+  overflow: hidden;                   /* กันส่วนเกินหลุดนอกมุมโค้ง */
+}
+.product:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, .18);
+}
+
+/* ลิงก์ทับเต็มการ์ด (ทั้งใบคลิกได้) */
+.product__link{
+  position: absolute;
+  inset: 0;
+  z-index: 1;                         /* ใต้อินเตอร์แอคชันของปุ่มตะกร้า */
+}
+
+/* Thumbnail: ฟิกซ์ความสูงเท่ากัน */
+.product__thumb {
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid rgba(0, 0, 0, .05);
+  overflow: hidden;
+  background: #fff;
+}
+.product__thumb img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 10px;
+}
+/* ถ้าไม่มีรูป ให้มีพื้นหลังจาง ๆ เป็น placeholder */
+.product__thumb:not(:has(img)) { background: #fafbff; }
+
+/* Body */
+.product__body {
+  position: relative;                 /* ให้ปุ่มวางอิงในนี้ */
+  padding: 12px 14px 44px;            /* เผื่อพื้นที่ด้านล่างสำหรับปุ่ม */
+  z-index: 2;                         /* อยู่เหนือ overlay link */
+}
+
+.product__title {
+  font: 500 14px/1.35 "Poppins", system-ui, sans-serif;
+  color: #222;
+  margin: 0 0 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.7em;
+  line-clamp: 2;
+}
+
+.product__price {
+  font: 700 15px/1 "Poppins", system-ui, sans-serif;
+  color: #000;
+}
+
+/* ปุ่ม Add to Cart (อยู่มุมขวาล่างการ์ด) */
+.add-to-cart{
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 3;                         /* เหนือ overlay link เพื่อคลิกได้ */
+  background: var(--primary);
+  color: #fff;
+  width: 40px; height: 40px;
+  border: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,.15);
+  cursor: pointer;
+  transition: transform .12s ease, background .2s ease;
+}
+.add-to-cart:hover { background:#2c2e8f; transform: translateY(-1px); }
+.add-to-cart i { pointer-events: none; font-size: 16px; }
+
+/* ===== Hero Card ===== */
+.hero-card {
+  display: block;
+  justify-self: center;
+  width: 100%;
+  height: 380px;
+  border: 2px solid #ddd;
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.hero-card:hover { transform: translateY(-4px); box-shadow: 0 6px 16px rgba(0,0,0,.15); }
+.hero-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ===== Browse by Category ===== */
+.category {
+  background: var(--primary);
+  padding: 28px 0 36px;
+  color: #fff;
+  border-radius: 14px;
+  width: 100%;
+  box-shadow: var(--shadow);
+  margin: 60px 0;
+}
+.category__inner { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+.category__head h3 { margin: 0; font: 700 24px/1.2 "Poppins", system-ui, sans-serif; }
+.category__underline {
+  display: inline-block;
+  height: 4px; width: 140px;
+  background: #fff; border-radius: 4px; margin-top: 10px;
+}
+
+/* การ์ด Category */
+.category-card {
+  display: block;
+  background: var(--card);
+  border-radius: 14px;
+  border: 2px solid rgba(0,0,0,0.06);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  overflow: hidden;
+  padding: 28px;
+  height: 300px;
+  transition: transform .2s, box-shadow .2s;
+  justify-content: center;
+  align-items: center;
+}
+.category-card:hover { transform: translateY(-6px); box-shadow: 0 10px 20px rgba(0,0,0,0.16); }
+.category-card img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 12px; }
+
+/* Grid การ์ดใน Category */
+.category__grid {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  margin-left: 40px;
+  margin-right: 40px;
+}
+@media (max-width: 1024px) { .category__grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) { .category__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .category__grid { grid-template-columns: 1fr; } }
+
+/* ===== All Products ===== */
+.all-products { margin: 48px 0 40px; }
+
+.ap-head { margin-bottom: 18px; }
+.ap-head h2 {
+  font: 800 34px/1.2 "Poppins", system-ui, sans-serif;
+  color: #111; margin: 0 0 8px;
+}
+.ap-underline {
+  display: inline-block;
+  width: 140px; height: 4px;
+  background: #AAA; border-radius: 3px;
+}
+
+/* แนวเลื่อนข้าง */
+.ap-wrap {
+  position: relative;
+}
+.ap-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(240px, 280px); /* ความกว้างการ์ด */
+  gap: 28px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 6px 12px 6px 12px;
+}
+.ap-row::-webkit-scrollbar { height: 8px; }
+.ap-row::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 10px; }
+
+.ap-row .product {
+  scroll-snap-align: start;
+  width: 100%;
+  /* ใช้สไตล์การ์ดเดียวกับ .product เดิม */
+}
+
+/* ปุ่มลูกศรขวา */
+.ap-next{
+  position: absolute;
+  top: 50%; right: -6px;
+  transform: translateY(-50%);
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: none;
+  background: #111;
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(0,0,0,.18);
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.ap-next:hover{ filter: brightness(0.9); }
+.ap-next span{ transform: translateX(2px); }
+@media (max-width: 640px){
+  .ap-next { right: 4px; width: 44px; height: 44px; }
+}
