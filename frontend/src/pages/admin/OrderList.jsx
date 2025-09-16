@@ -1,10 +1,12 @@
 // src/pages/admin/OrderList.jsx
 import React, { useEffect, useMemo, useState } from "react";
-// ปรับ path CSS ให้ตรงโปรเจกต์ของคุณ
-import "./sidebar.css"; 
-import "./ad_order_pro_list.css";
-// ถ้าใช้ React Router ให้เปิดคอมเมนต์นี้แล้วใช้ <Link> ด้านล่าง
+
+// ✅ ใช้ alias @
+import AdminLayout from "@/layouts/AdminLayout.jsx";
+import "@/pages/admin/admin-style/sidebar.css";
+import "@/pages/admin/admin-style/ad_order_pro_list.css";
 // import { Link } from "react-router-dom";
+
 
 export default function OrderList() {
   // โหลด Font Awesome แค่ครั้งเดียว
@@ -101,11 +103,7 @@ export default function OrderList() {
       <aside className="sidebar">
         <div className="brand">
           <div className="brand-logo">
-            <img
-              src="/images/admin/logo no BG.png"
-              alt="Admin Logo"
-              style={{ width: 120, height: "auto" }}
-            />
+             <img src="/assets/logo-no-bg.png" alt="Admin Logo" style={{ width: 120, height: "auto" }}/>    
           </div>
           <i
             className="fa-solid fa-bars menu-btn"

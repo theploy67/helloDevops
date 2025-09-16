@@ -1,13 +1,19 @@
 // src/pages/admin/ProductsList.jsx
 import React, { useEffect, useMemo, useState } from "react";
-// ถ้ามีไฟล์เหล่านี้อยู่จริง ให้แก้ path ให้ตรงโปรเจกต์ของคุณ
-import "./sidebar.css";
-import "./ad_product_list.css";
-// ถ้าใช้ React Router ให้เปิดบรรทัดนี้ และใช้ <Link> ด้านล่าง
-// import { Link } from "react-router-dom";
+
+// (ถ้ายังไม่ใช้จริง สามารถลบได้เพื่อเลี่ยง unused import warning)
+import AdminLayout from "@/layouts/AdminLayout.jsx";
+
+// ✅ CSS ด้วย alias ให้ตรงกับตำแหน่งไฟล์ของคุณ
+import "@/pages/admin/admin-style/sidebar.css";
+import "@/pages/admin/admin-style/ad_product_list.css";
 
 export default function ProductsList() {
-  // ---- โหลด Font Awesome แบบแปะ <link> เข้าหน้าเพียงครั้งเดียว ----
+  /* ---------- Sidebar toggles (แทน data-target + JS เดิม) ---------- */
+  const [isEcomOpen, setIsEcomOpen] = useState(true);
+  const [isOrderOpen, setIsOrderOpen] = useState(true);
+
+  /* ---------- โหลด Font Awesome ครั้งเดียว ---------- */
   useEffect(() => {
     const id = "fa-6-5-cdn";
     if (!document.getElementById(id)) {
@@ -20,14 +26,10 @@ export default function ProductsList() {
     }
   }, []);
 
-  // ---- เมนูย่อยใน Sidebar (เปิด/ปิด) ----
-  const [isEcomOpen, setIsEcomOpen] = useState(true);
-  const [isOrderOpen, setIsOrderOpen] = useState(true);
-
-  // ---- ข้อมูลสินค้า (ตัวอย่าง) ----
+  /* ---------- Table data (แทน .table-row ที่เขียนทิ้งไว้ใน HTML) ---------- */
   const sampleRows = useMemo(
     () =>
-      Array.from({ length: 11 }).map((_, i) => ({
+      Array.from({ length: 32 }).map((_, i) => ({
         id: String(i + 1).padStart(5, "0"),
         name: "Name",
         price: "00.00",
@@ -39,12 +41,8 @@ export default function ProductsList() {
     []
   );
 
-  // ---- ค้นหา + เพจจิเนชัน ----
+  /* ---------- ค้นหา ---------- */
   const [query, setQuery] = useState("");
-  const rowsPerPage = 10;
-  const windowSize = 3;
-  const [page, setPage] = useState(1);
-
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return sampleRows;
@@ -57,37 +55,37 @@ export default function ProductsList() {
     );
   }, [query, sampleRows]);
 
+  /* ---------- เพจจิ้ง (พอร์ต logic จากสคริปต์ใน HTML) ---------- */
+  const rowsPerPage = 10; // ให้ตรงกับของเดิม
+  const windowSize = 3;   // แสดงเลขหน้าทีละ 3
+  const [page, setPage] = useState(1);
+
+  // เมื่อกรองแล้ว จำนวนหน้าอาจลด รีเซ็ตไปหน้า 1
+  useEffect(() => setPage(1), [query]);
+
   const totalItems = filtered.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / rowsPerPage));
-  const clampedPage = Math.min(Math.max(page, 1), totalPages);
+  const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+  const currentPage = clamp(page, 1, totalPages);
 
-  useEffect(() => {
-    // ถ้ากรองแล้วจำนวนหน้าเปลี่ยน ให้รีหน้ากลับไปที่ 1
-    setPage(1);
-  }, [query]);
-
-  const startIdx = (clampedPage - 1) * rowsPerPage;
+  const startIdx = (currentPage - 1) * rowsPerPage;
   const endIdx = Math.min(startIdx + rowsPerPage, totalItems);
   const pageRows = filtered.slice(startIdx, endIdx);
 
-  function windowRange(current, total, size) {
+  // สไลด์หน้าต่างเลขหน้าแบบเดียวกับสคริปต์เดิม
+  function windowRange(page, total, size) {
     const lastStart = Math.max(1, total - size + 1);
-    const start = Math.max(1, Math.min(current, lastStart));
+    const start = clamp(page, 1, lastStart);
     const end = Math.min(total, start + size - 1);
     return { start, end };
   }
-  const { start, end } = windowRange(clampedPage, totalPages, windowSize);
+  const { start, end } = windowRange(currentPage, totalPages, windowSize);
 
-  // ---- ปุ่ม “ADD NEW” ----
-  // ถ้าใช้ React Router:
-  // const AddButton = (
-  //   <Link to="/admin/add-product" className="btn-add">
-  //     <span className="box"><i className="fa-solid fa-plus"/></span>ADD NEW
-  //   </Link>
-  // );
-  // ถ้ายังไม่ได้ตั้ง Router ให้ใช้ <a> แล้วสร้างหน้า/เส้นทางให้ตรง:
+  const goto = (p) => setPage(clamp(p, 1, totalPages));
+
+  /* ---------- ปุ่ม ADD NEW ---------- */
   const AddButton = (
-    <a href="/admin/add-product" className="btn-add">
+    <a href="/admin/products/new" className="btn-add">
       <span className="box">
         <i className="fa-solid fa-plus" />
       </span>
@@ -97,14 +95,14 @@ export default function ProductsList() {
 
   return (
     <div className="app">
-      {/* Sidebar */}
+      {/* ===== Sidebar ===== */}
       <aside className="sidebar">
         <div className="brand">
           <div className="brand-logo">
             <img
-              src="/images/admin/logo no BG.png"
-              alt="Admin Logo"
-              style={{ width: 120, height: "auto" }}
+            src="/assets/logo-no-bg.png"
+            alt="Admin Logo"
+            style={{ width: 120, height: "auto" }}
             />
           </div>
           <i
@@ -153,12 +151,8 @@ export default function ProductsList() {
             id="menu-ecom"
             style={{ display: isEcomOpen ? "block" : "none" }}
           >
-            <a className="sub-item" href="#">
-              Add Product
-            </a>
-            <a className="sub-item active" href="#">
-              Product List
-            </a>
+            <a className="sub-item" href="#">Add Product</a>
+            <a className="sub-item active" href="#">Product List</a>
           </div>
         </div>
 
@@ -188,20 +182,14 @@ export default function ProductsList() {
             id="menu-order"
             style={{ display: isOrderOpen ? "block" : "none" }}
           >
-            <a className="sub-item" href="#">
-              Order List
-            </a>
-            <a className="sub-item" href="#">
-              Order Detail
-            </a>
-            <a className="sub-item" href="#">
-              Order Tracking
-            </a>
+            <a className="sub-item" href="#">Order List</a>
+            <a className="sub-item" href="#">Order Detail</a>
+            <a className="sub-item" href="#">Order Tracking</a>
           </div>
         </div>
       </aside>
 
-      {/* Main */}
+      {/* ===== Main ===== */}
       <main className="main">
         <header className="topbar">
           <div />
@@ -241,9 +229,9 @@ export default function ProductsList() {
               <div>Action</div>
             </div>
 
-            {/* แถวข้อมูล (เพจจิเนชันแล้ว) */}
-            {pageRows.map((r) => (
-              <div className="table-row" key={r.id}>
+            {/* แถวข้อมูล (แทน div.table-row ใน HTML) */}
+            {pageRows.map((r, idx) => (
+              <div className="table-row" key={`${r.id}-${idx}`}>
                 <div className="prod">
                   <span className="cube">
                     <i className="fa-solid fa-cube" />
@@ -263,7 +251,7 @@ export default function ProductsList() {
               </div>
             ))}
 
-            {/* Footer + Pager */}
+            {/* Footer + Pager (ยก logic จากสคริปต์เดิม) */}
             <div className="table-footer">
               <div className="hint">
                 {totalItems
@@ -275,8 +263,8 @@ export default function ProductsList() {
                 <button
                   className="circle"
                   aria-label="Prev"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={clampedPage === 1}
+                  onClick={() => goto(currentPage - 1)}
+                  disabled={currentPage === 1}
                 >
                   <i className="fa-solid fa-chevron-left" />
                 </button>
@@ -288,9 +276,9 @@ export default function ProductsList() {
                       <button
                         key={p}
                         type="button"
-                        className={`pill ${p === clampedPage ? "active" : ""}`}
-                        aria-current={p === clampedPage ? "page" : "false"}
-                        onClick={() => setPage(p)}
+                        className={`pill ${p === currentPage ? "active" : ""}`}
+                        aria-current={p === currentPage ? "page" : "false"}
+                        onClick={() => goto(p)}
                       >
                         {p}
                       </button>
@@ -301,10 +289,8 @@ export default function ProductsList() {
                 <button
                   className="circle"
                   aria-label="Next"
-                  onClick={() =>
-                    setPage((p) => Math.min(totalPages, p + 1))
-                  }
-                  disabled={clampedPage === totalPages}
+                  onClick={() => goto(currentPage + 1)}
+                  disabled={currentPage === totalPages}
                 >
                   <i className="fa-solid fa-chevron-right" />
                 </button>
