@@ -1,8 +1,11 @@
 // src/pages/admin/OrderDetail.jsx
 import React, { useEffect } from "react";
 // ปรับ path ให้ตรงโปรเจกต์ของคุณ
-import "./sidebar.css";
-import "./style-order-detail.css";
+import AdminLayout from "@/layouts/AdminLayout.jsx";
+
+// ✅ CSS ใช้ alias ทั้งหมด
+import "@/pages/admin/admin-style/sidebar.css";
+import "@/pages/admin/admin-style/style-order-detail.css";
 
 
 export default function OrderDetail() {
@@ -134,11 +137,7 @@ export default function OrderDetail() {
       <aside className="sidebar">
         <div className="brand">
           <div className="brand-logo">
-            <img
-              src="/asset/logo with BG.png"
-              alt="Admin Logo"
-              style={{ width: "120px", height: "auto" }}
-            />
+             <img src="/assets/logo-no-bg.png" alt="Admin Logo" style={{ width: 120, height: "auto" }}/>
           </div>
           <i
             className="fa-solid fa-bars menu-btn"

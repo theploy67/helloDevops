@@ -44,7 +44,12 @@ body {
 
 /* Header row */
 .content {
-    padding: 0 28px 32px
+    display: flex;
+    flex-direction: row; /* เรียงลูกแนวนอน */
+    gap: 10px;           /* เว้นระยะห่างแต่ละบล็อก */
+    padding: 20px;
+    align-items: flex-start; /* ให้เริ่มต้นตรงบน */
+
 }
 
 .content-header {
