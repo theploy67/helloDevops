@@ -1,5 +1,6 @@
 import React from "react";
-import "./sidebar.css"; // import css ของ sidebar
+// ใช้ path ตรงกับที่ไฟล์อยู่จริง
+import "@/pages/admin/admin-style/sidebar.css";
 
 export default function Sidebar() {
   return (
