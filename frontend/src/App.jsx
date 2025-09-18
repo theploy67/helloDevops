@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 // Layouts
 import UserLayout from "./layouts/UserLayout.jsx";
@@ -28,9 +28,12 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* ✅ Default route: redirect ไป login  ถ้าใครอยากให้หน้าไหนรันครั้งแรก ให้เปลี่ยนตรงนี้ */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
         {/* ✅ User side with header */}
         <Route element={<UserLayout />}>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/products" element={<ProductPage />} />
           <Route path="/place-order" element={<PlaceOrderPage />} />
@@ -50,14 +53,8 @@ export default function App() {
           <Route path="/admin/products/new" element={<AdminAddProductPage />} />
           <Route path="/admin/orders" element={<AdminOrderListPage />} />
           <Route path="/admin/orders/:id" element={<AdminOrderDetailPage />} />
-          <Route
-            path="/admin/orders/tracking"
-            element={<AdminOrderTrackingPage />}
-          />
-          <Route
-            path="/admin/products/:id/edit"
-            element={<AdminEditProductPage />}
-          />
+          <Route path="/admin/orders/tracking" element={<AdminOrderTrackingPage />} />
+          <Route path="/admin/products/:id/edit" element={<AdminEditProductPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
