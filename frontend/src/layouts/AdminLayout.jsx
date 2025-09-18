@@ -1,18 +1,27 @@
 // src/layouts/AdminLayout.jsx
-import React from "react";
+import { Outlet } from "react-router-dom";
+import AdminSidebar from "../components/AdminSidebar";
+import "./AdminLayout.css";
 
-// ✅ ชี้ไปยังโฟลเดอร์จริง (จาก layouts → pages/admin/admin-style)
-import "../pages/admin/admin-style/sidebar.css";
-
-// (ถ้ามี Sidebar component)
-import Sidebar from "../pages/admin/Sidebar.jsx";
-
-export default function AdminLayout({ children }) {
+export default function AdminLayout() {
   return (
     <div className="app">
-      {/* ใส่ Sidebar ถ้าใช้ */}
-      {/* <Sidebar /> */}
-      <main className="main">{children}</main>
+      {/* ซ้าย: เมนูแอดมิน */}
+      <AdminSidebar />
+
+      {/* ขวา: พื้นที่ทำงาน */}
+      <main className="main">
+        {/* ถ้าต้องการแถบด้านบนคงที่ไว้ทุกหน้า ใส่ที่นี่ได้ */}
+        <header className="topbar">
+          <div />
+          <div className="account">
+            <i className="fa-regular fa-circle-user" /> ACCOUNT
+          </div>
+        </header>
+
+        {/* เนื้อหาแต่ละหน้า (เช่น AdminProductListPage) จะมาแสดงตรงนี้ */}
+        <Outlet />
+      </main>
     </div>
   );
 }
