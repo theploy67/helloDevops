@@ -1,3 +1,265 @@
 /* AdminOrderListPage */
 body { font-family: system-ui, Arial, sans-serif; }
 h1 { margin: 24px; text-align: center; font-size: 28px; }
+
+/* .table-header-order,
+.table-row {
+  display: grid;
+  grid-template-columns: 170px 140px 120px 140px 120px 120px 120px 120px;
+  gap: 0;
+  align-items: center;
+  padding: 20px 20px;
+} */
+
+/* ================= AdminOrderListPage.css (scoped to AdminOrderListPage) ================= */
+/* ใช้กับหน้า: <div class="app" data-page="AdminOrderListPage"> */
+
+/* Theme + base for this page only */
+.app[data-page="AdminOrderListPage"] {
+  --bg: #ebeff7;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+
+  display: flex;
+  min-height: 100vh;
+  color: var(--text);
+  background: var(--bg);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Main layout */
+.app[data-page="AdminOrderListPage"] .main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header row */
+.app[data-page="AdminOrderListPage"] .content {
+  padding: 0 28px 32px;
+}
+
+.app[data-page="AdminOrderListPage"] .content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.app[data-page="AdminOrderListPage"] .title {
+  margin: 0 0 12px;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+/* Action bar */
+.app[data-page="AdminOrderListPage"] .action-bar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.app[data-page="AdminOrderListPage"] .search {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  max-width: 440px;
+}
+
+.app[data-page="AdminOrderListPage"] .search input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+}
+
+.app[data-page="AdminOrderListPage"] .btn-add {
+  text-decoration: none;
+  color: #111827;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-weight: 600;
+}
+
+.app[data-page="AdminOrderListPage"] .btn-add .box {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #111827;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Table card */
+.app[data-page="AdminOrderListPage"] .table-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  clip-path: inset(0 round 16px);
+  -webkit-mask-image: -webkit-radial-gradient(white, black); /* ช่วย Safari/บางเคส */
+}
+
+/* เสริม: ให้พื้นหัว-ท้ายตามโค้งของการ์ดด้วย (ไม่เปลี่ยน layout) */
+.app[data-page="AdminOrderListPage"] .table-header { border-radius: 16px 16px 0 0; }
+.app[data-page="AdminOrderListPage"] .table-footer { border-radius: 0 0 16px 16px; }
+
+/* 6 columns: ORDER ID | Price | Quantity | Status | Tracking | Action */
+.app[data-page="AdminOrderListPage"] .table-header,
+.app[data-page="AdminOrderListPage"] .table-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+  align-items: center;
+  padding: 20px 20px;
+}
+
+/* prevent overflow pushing columns */
+.app[data-page="AdminOrderListPage"] .table-header > *,
+.app[data-page="AdminOrderListPage"] .table-row > * {
+  min-width: 0;
+}
+
+.app[data-page="AdminOrderListPage"] .table-header {
+  background: #f8fafc;
+  color: #374151;
+  font-weight: 700;
+  border-bottom: 1px solid var(--line);
+}
+
+.app[data-page="AdminOrderListPage"] .table-row {
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+
+.app[data-page="AdminOrderListPage"] .table-row:nth-child(even) {
+  background: #fbfcff;
+}
+
+/* Colors per design */
+.app[data-page="AdminOrderListPage"] .table-row > :nth-child(4) { /* Status */
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.app[data-page="AdminOrderListPage"] .table-row > :nth-child(5) { /* Tracking */
+  color: #2563eb;
+  font-weight: 600;
+  cursor: pointer;
+}
+.app[data-page="AdminOrderListPage"] .table-row > :nth-child(5):hover {
+  text-decoration: underline;
+}
+
+/* Action column center + icon buttons (same border look) */
+.app[data-page="AdminOrderListPage"] .table-header > :nth-child(6),
+.app[data-page="AdminOrderListPage"] .table-row    > :nth-child(6) {
+  text-align: center;
+}
+
+.app[data-page="AdminOrderListPage"] .act {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app[data-page="AdminOrderListPage"] .act i {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: 0 2px 0 rgba(0,0,0,.06);
+  cursor: pointer;
+}
+
+/* Selected row (optional) */
+.app[data-page="AdminOrderListPage"] .table-row.selected {
+  outline: 3px dashed #8b5cf6;
+  outline-offset: -3px;
+}
+
+/* Footer / Pager */
+.app[data-page="AdminOrderListPage"] .table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 25px;
+  background: #fff;
+  border-top: 1px solid var(--line);
+}
+
+.app[data-page="AdminOrderListPage"] .hint {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.app[data-page="AdminOrderListPage"] .pager {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app[data-page="AdminOrderListPage"] .circle,
+.app[data-page="AdminOrderListPage"] .pill {
+  height: 34px;
+  border: 1px solid var(--line);
+  background: #fff;
+  cursor: pointer;
+}
+
+.app[data-page="AdminOrderListPage"] .circle {
+  width: 34px;
+  border-radius: 50%;
+}
+
+.app[data-page="AdminOrderListPage"] .pill {
+  min-width: 34px;
+  padding: 0 10px;
+  border-radius: 999px;
+}
+
+.app[data-page="AdminOrderListPage"] .pill.active {
+  background: #111827;
+  color: #fff;
+  border-color: #111827;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .app[data-page="AdminOrderListPage"] .content {
+    padding: 0 16px 24px;
+  }
+  .app[data-page="AdminOrderListPage"] .action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 640px) {
+  .app[data-page="AdminOrderListPage"] .table-header,
+  .app[data-page="AdminOrderListPage"] .table-row {
+    grid-template-columns: repeat(6, minmax(120px, 1fr));
+    padding: 14px 14px;
+  }
+}
