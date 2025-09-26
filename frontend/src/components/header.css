@@ -13,13 +13,36 @@ html, body{
 }
 
 /* Top bar + Header */
-.pm-topbar{ height:28px; background:var(--pm-primary); width:100%; display:block; }
-.pm-header{ background:#fff; box-shadow:0 4px 4px rgba(0,0,0,.25); width:100%; display:block; }
-.pm-header__inner{
-  max-width:var(--pm-max); margin:0 auto; padding:16px 20px;
-  display:grid; grid-template-columns:auto 1fr minmax(320px,520px) auto;
-  align-items:center; gap:20px;
+.pm-topbar{
+  height: 28px;
+  background: var(--pm-primary);
+  width: 100%;
+  display: block;
+  position: sticky;   /* ทำให้ติด */
+  top: 0;             /* ชิดขอบบน */
+  z-index: 1000;      /* สูงกว่า header */
 }
+
+.pm-header{
+  background: #fff;
+  box-shadow: 0 4px 4px rgba(0,0,0,.25);
+  width: 100%;
+  display: block;
+  position: sticky;   
+  top: 28px;          /* ชดเชยความสูง topbar */
+  z-index: 999;       /* ต่ำกว่า topbar นิดหน่อย */
+}
+
+.pm-header__inner{
+  max-width: var(--pm-max);
+  margin: 0 auto;
+  padding: 16px 20px;
+  display: grid;
+  grid-template-columns: auto 1fr minmax(320px,520px) auto;
+  align-items: center;
+  gap: 20px;
+}
+
 
 /* Logo */
 .pm-logo img{ height:80px; width:auto; display:block; }
@@ -28,7 +51,7 @@ html, body{
 .pm-nav{ display:flex; gap:28px; }
 .pm-nav a{
   color:var(--pm-text); text-decoration:none;
-  font-size:16px; font-weight:400; line-height:1.2;
+  font-size:15px; font-weight:400; line-height:1.2;
 }
 .pm-nav a:hover{ color:var(--pm-primary); }
 
@@ -165,4 +188,56 @@ html, body{
 
 @media (max-width:640px){
   .pm-search{ height:40px; }
+}
+
+/* ===== Global Breadcrumb ===== */
+.breadcrumb {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.breadcrumb ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.breadcrumb li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.breadcrumb a {
+  color: #555;
+  text-decoration: none;
+}
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+.breadcrumb .current {
+  color: #333;
+  font-weight: 600;
+  pointer-events: none;
+}
+.breadcrumb li:not(:last-child)::after {
+  content: "›";
+  color: #aaa;
+}
+
+/* ทำให้เมนูที่ active โดดเด่น */
+.pm-nav a.active,
+.pm-right a.active {
+  color: var(--pm-primary);
+  font-weight: 600;   /* หนาน้ำหนักฟอนต์ */
+}
+
+/* ให้ทุกหน้ามี scrollbar เสมอ */
+html {
+  overflow-y: scroll;
 }
