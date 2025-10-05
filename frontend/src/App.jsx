@@ -15,6 +15,7 @@ import DetailPage from "./pages/DetailPage.jsx";
 import TrackingUserPage from "./pages/TrackingUserPage.jsx";
 import WishListPage from "./pages/WishListPage.jsx";
 import HistoryPage from "./pages/HistoryPage.jsx";
+import CartPage from "./pages/CartPage.jsx";
 
 // Admin pages
 import AdminProductListPage from "./pages_admin/AdminProductListPage.jsx";
@@ -41,6 +42,7 @@ export default function App() {
           <Route path="/tracking" element={<TrackingUserPage />} />
           <Route path="/wishlist" element={<WishListPage />} />
           <Route path="/history" element={<HistoryPage />} />
+          <Route path="/cart" element={<CartPage />} />
         </Route>
 
         {/* ❌ No header */}

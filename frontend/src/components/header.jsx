@@ -1,21 +1,109 @@
-import React from "react";
-import "./header.css"; // ปรับ path ให้ตรงโครงสร้างของคุณ
+import React, { useEffect, useRef, useState } from "react";
+import "./header.css";
 
 const Header = () => {
+  const [accOpen, setAccOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
+  const wrapRef = useRef(null);
+
+  // ให้ body มี padding-top รองรับ header ติดบน
+  useEffect(() => {
+    document.body.classList.add("has-header");
+    return () => {
+      document.body.classList.remove("has-header");
+    };
+  }, []);
+
+  // ปิดเมนูเมื่อคลิกนอก/resize
+  useEffect(() => {
+    const onClickOutside = (e) => {
+      if (!wrapRef.current?.contains(e.target)) {
+        setAccOpen(false);
+        setNavOpen(false);
+      }
+    };
+    const onResize = () => {
+      setAccOpen(false);
+      setNavOpen(false);
+    };
+    document.addEventListener("click", onClickOutside);
+    window.addEventListener("resize", onResize);
+    return () => {
+      document.removeEventListener("click", onClickOutside);
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
+
+  // ===== NEW: ติด active ให้เมนู + ไอคอนตาม path ปัจจุบัน (รวมหน้า Home และไอคอนขวา)
+  useEffect(() => {
+    const path = (window.location.pathname || "/").toLowerCase();
+
+    // helper
+    const markActive = (el) => {
+      if (!el) return;
+      el.classList.add("active");
+      el.setAttribute("aria-current", "page");
+    };
+    const unmarkAll = (sel) => {
+      document.querySelectorAll(sel).forEach((el) => {
+        el.classList.remove("active");
+        el.removeAttribute("aria-current");
+      });
+    };
+
+    // เคลียร์ก่อน
+    unmarkAll(".pm-nav a, .pm-right a.pm-icon, .pm-account");
+
+    // เมนูหลักซ้าย
+    document.querySelectorAll(".pm-nav a").forEach((a) => {
+      const href = (a.getAttribute("href") || "").toLowerCase();
+      const isHomeLink = href === "/" || href === "/home" || href.endsWith("/index.html");
+      const isHomePage = path === "/" || path.endsWith("/index.html") || path.startsWith("/home");
+
+      if (isHomeLink && isHomePage) {
+        markActive(a);
+        return;
+      }
+      if (href && href !== "/" && path.startsWith(href)) {
+        markActive(a);
+      }
+    });
+
+    // ไอคอนขวา: wishlist / cart
+    document.querySelectorAll(".pm-right a.pm-icon").forEach((a) => {
+      const href = (a.getAttribute("href") || "").toLowerCase();
+      if (href && path.startsWith(href)) {
+        markActive(a);
+      }
+    });
+
+    // ปุ่ม ACCOUNT (เป็น button ไม่มี href) → ให้ active เมื่ออยู่หน้าเกี่ยวกับบัญชี
+    const accountBtn = document.querySelector(".pm-account");
+    if (accountBtn) {
+      const isAccountRelated =
+        path.startsWith("/login") ||
+        path.startsWith("/register") ||
+        path.startsWith("/profile") ||
+        path.startsWith("/account") ||
+        path.startsWith("/orders");
+      if (isAccountRelated) markActive(accountBtn);
+    }
+  }, []);
+
   return (
     <>
       {/* Top stripe */}
       <div className="pm-topbar" />
 
-      <header className="pm-header">
+      <header className="pm-header" ref={wrapRef}>
         <div className="pm-header__inner">
           {/* Logo */}
-          <a href="/" className="pm-logo" aria-label="Pure Mart">
-            <img src="../public/assets/logo.png" alt="PURE MART" />
+          <a href="/home" className="pm-logo" aria-label="Pure Mart">
+            <img src="/assets/logo.png" alt="PURE MART" />
           </a>
 
           {/* Nav */}
-          <nav className="pm-nav" aria-label="Primary">
+          <nav className={`pm-nav ${navOpen ? "is-open" : ""}`} aria-label="Primary">
             <a href="/home">Home</a>
             <a href="/shop">Shop</a>
             <a href="/best-sellers">Best Sellers</a>
@@ -38,9 +126,10 @@ const Header = () => {
               <button
                 className="pm-icon pm-account"
                 aria-haspopup="true"
-                aria-expanded="false"
+                aria-expanded={accOpen ? "true" : "false"}
                 aria-controls="account-menu"
                 type="button"
+                onClick={() => setAccOpen((v) => !v)}
               >
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <circle cx="12" cy="8" r="4" />
@@ -52,9 +141,27 @@ const Header = () => {
                 </svg>
               </button>
 
-              <div id="account-menu" className="pm-dropdown" role="menu">
-                <a href="/orders" role="menuitem" tabIndex={-1}>Order History</a>
-                <a href="/login" role="menuitem" tabIndex={-1}>Log Out</a>
+              <div
+                id="account-menu"
+                className={`pm-dropdown ${accOpen ? "is-open" : ""}`}
+                role="menu"
+              >
+                <a
+                  href="/orders"
+                  role="menuitem"
+                  tabIndex={accOpen ? 0 : -1}
+                  onClick={() => setAccOpen(false)}
+                >
+                  Order History
+                </a>
+                <a
+                  href="/login"
+                  role="menuitem"
+                  tabIndex={accOpen ? 0 : -1}
+                  onClick={() => setAccOpen(false)}
+                >
+                  Log Out
+                </a>
               </div>
             </div>
 
@@ -75,7 +182,13 @@ const Header = () => {
             </a>
 
             {/* Hamburger */}
-            <button className="pm-burger" aria-label="Open menu" type="button">
+            <button
+              className="pm-burger"
+              aria-label="Open menu"
+              aria-expanded={navOpen ? "true" : "false"}
+              type="button"
+              onClick={() => setNavOpen((v) => !v)}
+            >
               <span></span><span></span><span></span>
             </button>
           </div>
